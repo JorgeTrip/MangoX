@@ -1,0 +1,5 @@
+#!/bin/sh
+mensaje="$(head -n 1 "$1" | tr -d '\r')"
+echo "$mensaje" | grep -Eiq '^se[[:space:]]+' && exit 0
+echo "El mensaje debe comenzar con 'Se ' y estar en pasado impersonal."
+exit 1
