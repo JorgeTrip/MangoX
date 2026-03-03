@@ -1,4 +1,4 @@
-import type { Gasto, Ingreso, Operacion, Prestamo } from '../types/finanzas';
+import type { Bien, Cuenta, Gasto, Ingreso, Operacion, Prestamo, Tarjeta } from '../types/finanzas';
 
 const KEYS = {
   perfil: 'mangox-perfil',
@@ -6,6 +6,9 @@ const KEYS = {
   ingresos: 'mangox-ingresos',
   prestamos: 'mangox-prestamos',
   operaciones: 'mangox-operaciones',
+  bienes: 'mangox-bienes',
+  cuentas: 'mangox-cuentas',
+  tarjetas: 'mangox-tarjetas',
   preferenciasNotificacion: 'mangox-preferencias-notificacion',
 } as const;
 
@@ -43,6 +46,18 @@ export function listarIngresos() {
 
 export function listarOperaciones() {
   return leerLista<Operacion>(KEYS.operaciones);
+}
+
+export function listarBienes() {
+  return leerLista<Bien>(KEYS.bienes);
+}
+
+export function listarCuentas() {
+  return leerLista<Cuenta>(KEYS.cuentas);
+}
+
+export function listarTarjetas() {
+  return leerLista<Tarjeta>(KEYS.tarjetas);
 }
 
 export function agregarGasto(gasto: Gasto) {
@@ -86,6 +101,26 @@ export function agregarOperacion(operacion: Operacion) {
   guardarLista(KEYS.operaciones, [operacion, ...data]);
 }
 
+export function agregarBien(bien: Bien) {
+  const data = listarBienes();
+  guardarLista(KEYS.bienes, [bien, ...data]);
+}
+
+export function actualizarBien(bien: Bien) {
+  const data = listarBienes();
+  guardarLista(KEYS.bienes, [bien, ...data.filter((b) => b.id !== bien.id)]);
+}
+
+export function agregarCuenta(cuenta: Cuenta) {
+  const data = listarCuentas();
+  guardarLista(KEYS.cuentas, [cuenta, ...data]);
+}
+
+export function agregarTarjeta(tarjeta: Tarjeta) {
+  const data = listarTarjetas();
+  guardarLista(KEYS.tarjetas, [tarjeta, ...data]);
+}
+
 export type PreferenciasNotificacion = {
   email: boolean;
   push: boolean;
@@ -106,3 +141,4 @@ export function guardarPreferenciasNotificacion(preferencias: PreferenciasNotifi
 export function clavesAlmacenMangoX() {
   return Object.values(KEYS);
 }
+

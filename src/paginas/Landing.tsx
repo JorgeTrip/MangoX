@@ -1,9 +1,22 @@
 import { useTranslation } from 'react-i18next';
-import { ArrowRight, ShieldCheck, Sparkles, LineChart, WalletCards } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { ArrowRight, ShieldCheck, Sparkles, LineChart, WalletCards, Play } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
+import { useContext } from 'react';
+import { SesionContexto } from '../contextos/sesion';
+import { cargarDatosDemo } from '../servicios/datosDemo';
 
 export default function Landing() {
   const { t } = useTranslation();
+  const navigate = useNavigate();
+  const { iniciarSesion } = useContext(SesionContexto);
+
+  /** Carga datos demo y redirige al dashboard */
+  const iniciarDemo = () => {
+    cargarDatosDemo();
+    iniciarSesion();
+    navigate('/inicio');
+  };
+
   return (
     <div className="space-y-6">
       <section className="rounded-3xl p-8 md:p-12 glass dark:glass-dark surface-card">
@@ -18,10 +31,12 @@ export default function Landing() {
             {t('landing.cta')}
             <ArrowRight className="size-4" />
           </Link>
-          <Link to="/onboarding" className="inline-flex items-center gap-2 rounded-full px-5 py-3 border border-white/25 hover:bg-black/5 transition dark:hover:bg-white/10">
-            Ver recorrido
-          </Link>
+          <button onClick={iniciarDemo} className="inline-flex items-center gap-2 rounded-full px-5 py-3 border border-white/25 hover:bg-black/5 transition dark:hover:bg-white/10">
+            <Play className="size-4" />
+            {t('landing.demo')}
+          </button>
         </div>
+        <p className="opacity-50 text-xs mt-2">{t('landing.demo_desc')}</p>
       </section>
       <section className="grid md:grid-cols-3 gap-4">
         <Feature icono={<LineChart className="size-5" />} titulo="Análisis en tiempo real" texto="Detectá desvíos de gastos y oportunidades de ahorro al instante." />

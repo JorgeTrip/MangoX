@@ -5,18 +5,51 @@
   },
   "nav": {
     "inicio": "Inicio",
+    "dashboard": "Análisis",
     "onboarding": "Onboarding",
     "acerca": "Acerca",
     "reparto": "Reparto",
-    "prestamos": "Préstamos"
+    "prestamos": "Préstamos",
+    "bienes": "Bienes",
+    "entidades": "Entidades",
+    "configuracion": "Configuración"
   },
   "landing": {
     "hero_titulo": "Controla tu patrimonio con precisión",
-    "cta": "Comenzar"
+    "cta": "Comenzar",
+    "demo": "Probar demo",
+    "demo_desc": "Explorá la app con datos de ejemplo"
   },
   "acerca": {
     "titulo": "Acerca",
     "cambios": "Cambios recientes"
+  },
+  "bienes": {
+    "titulo": "Bienes patrimoniales",
+    "descripcion": "Seguimiento de compras y ventas con cuotas.",
+    "nuevo": "Nuevo bien",
+    "cuotas": "Cuotas",
+    "cuota_valor": "Valor cuota",
+    "ajustado": "Ajustado",
+    "pendiente": "Pendiente",
+    "ajuste_placeholder": "Ajustar monto cobrado (opcional)",
+    "marcar_cobrada": "Marcar cobrada",
+    "completado": "Todas las cuotas cobradas",
+    "sin_bienes": "Sin bienes registrados",
+    "cuota_marcada": "Cuota marcada como cobrada"
+  },
+  "dashboard": {
+    "titulo": "Dashboard Analítico",
+    "dia": "Día",
+    "semana": "Semana",
+    "mes": "Mes",
+    "gastos_periodo": "Gastos del período",
+    "ingresos_periodo": "Ingresos del período",
+    "balance": "Balance",
+    "evolucion": "Evolución temporal",
+    "por_categoria": "Por categoría",
+    "desglose": "Desglose de gastos",
+    "sin_datos": "Sin datos para este período"
   },
   "reparto": {
     "nuevo": "Nuevo",

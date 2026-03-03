@@ -52,6 +52,47 @@ export type Operacion = {
   moneda: Moneda;
 };
 
+/** Representa un bien patrimonial (auto, inmueble, otro) con seguimiento de cuotas */
+export type TipoBien = 'Auto' | 'Inmueble' | 'Otro';
+export type OperacionBien = 'Compra' | 'Venta';
+
+export type Bien = {
+  id: string;
+  tipo: TipoBien;
+  descripcion: string;
+  operacion: OperacionBien;
+  comprador: string;
+  vendedor: string;
+  montoTotal: number;
+  moneda: Moneda;
+  cuotasTotales: number;
+  cuotasPagadas: number;
+  fechaOperacion: string;
+  /** Permite sobreescribir el monto real cobrado por cuota */
+  ajusteCobro?: number;
+};
+
+/** Cuenta bancaria o billetera virtual */
+export type TipoCuenta = 'Banco' | 'Billetera Virtual';
+
+export type Cuenta = {
+  id: string;
+  nombreEntidad: string;
+  saldoActual: number;
+  moneda: Moneda;
+  tipo: TipoCuenta;
+};
+
+/** Tarjeta de crédito vinculada a una entidad */
+export type Tarjeta = {
+  id: string;
+  nombre: string;
+  bancoEntidad: string;
+  marca: MarcaTarjeta;
+  diaCierre: number;
+  diaVencimiento: number;
+};
+
 export type DestinoIngreso = 'ahorro' | 'gasto' | 'cambio_a_pesos_tasa';
 
 export type Ingreso = {
@@ -66,6 +107,8 @@ export type Ingreso = {
   destino: DestinoIngreso;
   tasaCambioPesos?: number;
   esCobroReal: boolean;
+  /** Si el ingreso proviene de la venta de un bien */
+  bienId?: string;
 };
 
 export type CategoriaPresupuesto = {

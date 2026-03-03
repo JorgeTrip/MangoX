@@ -5,6 +5,7 @@ import { guardarPreferenciasNotificacion, leerPreferenciasNotificacion, type Pre
 import { exportarPortabilidadJson, importarPortabilidadJson } from '../servicios/portabilidad';
 import { listarCategorias, guardarCategoria, eliminarCategoria } from '../servicios/categorias';
 import type { CategoriaPresupuesto } from '../types/finanzas';
+import { sincronizarCategoriasDesdeSupabase, subirCategoriasASupabase } from '../servicios/syncSupabase';
 
 export default function Configuracion() {
   const { idioma, cambiar } = useContext(IdiomaContexto);
@@ -19,6 +20,15 @@ export default function Configuracion() {
   useEffect(() => {
     guardarPreferenciasNotificacion(preferencias);
   }, [preferencias]);
+  useEffect(() => {
+    (async () => {
+      const remotas = await sincronizarCategoriasDesdeSupabase();
+      if (remotas && remotas.length > 0) {
+        remotas.forEach((c) => guardarCategoria(c));
+        setCategorias(listarCategorias());
+      }
+    })();
+  }, []);
 
   const exportar = () => {
     const contenido = exportarPortabilidadJson();
@@ -113,6 +123,7 @@ export default function Configuracion() {
                   const upd: CategoriaPresupuesto = { ...c, techoPresupuesto: Number.isNaN(techo) ? undefined : techo };
                   guardarCategoria(upd);
                   setCategorias(listarCategorias());
+                  void subirCategoriasASupabase(listarCategorias());
                 }}
                 className="w-28 rounded-md px-2 py-1 bg-white/80 dark:bg-white/10 text-sm"
               />
@@ -120,6 +131,7 @@ export default function Configuracion() {
                 onClick={() => {
                   eliminarCategoria(c.id);
                   setCategorias(listarCategorias());
+                  void subirCategoriasASupabase(listarCategorias());
                 }}
                 className="rounded-md px-2 py-1 bg-black/10 dark:bg-white/10 text-xs"
               >
@@ -141,6 +153,7 @@ export default function Configuracion() {
               const cat: CategoriaPresupuesto = { id: crypto.randomUUID(), nombre: nuevaCat.nombre.trim(), emoticon: nuevaCat.emoticon || '💼', tipo: nuevaCat.tipo, techoPresupuesto: nuevaCat.techo ? Number(nuevaCat.techo) : undefined };
               guardarCategoria(cat);
               setCategorias(listarCategorias());
+              void subirCategoriasASupabase(listarCategorias());
               setNuevaCat({ nombre: '', emoticon: '💼', tipo: 'egreso', techo: '' });
             }}
             className="rounded-md px-3 py-1 bg-black/10 dark:bg:white/10"

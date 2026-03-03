@@ -5,18 +5,51 @@
   },
   "nav": {
     "inicio": "Home",
+    "dashboard": "Analytics",
     "onboarding": "Onboarding",
     "acerca": "About",
     "reparto": "Split",
-    "prestamos": "Loans"
+    "prestamos": "Loans",
+    "bienes": "Assets",
+    "entidades": "Entities",
+    "configuracion": "Settings"
   },
   "landing": {
     "hero_titulo": "Control your net worth precisely",
-    "cta": "Get started"
+    "cta": "Get started",
+    "demo": "Try demo",
+    "demo_desc": "Explore the app with sample data"
   },
   "acerca": {
     "titulo": "About",
     "cambios": "Recent changes"
+  },
+  "bienes": {
+    "titulo": "Assets",
+    "descripcion": "Track purchases and sales with installments.",
+    "nuevo": "New asset",
+    "cuotas": "Installments",
+    "cuota_valor": "Installment value",
+    "ajustado": "Adjusted",
+    "pendiente": "Pending",
+    "ajuste_placeholder": "Adjust actual amount (optional)",
+    "marcar_cobrada": "Mark collected",
+    "completado": "All installments collected",
+    "sin_bienes": "No assets registered",
+    "cuota_marcada": "Installment marked as collected"
+  },
+  "dashboard": {
+    "titulo": "Analytics Dashboard",
+    "dia": "Day",
+    "semana": "Week",
+    "mes": "Month",
+    "gastos_periodo": "Period expenses",
+    "ingresos_periodo": "Period income",
+    "balance": "Balance",
+    "evolucion": "Time evolution",
+    "por_categoria": "By category",
+    "desglose": "Expense breakdown",
+    "sin_datos": "No data for this period"
   },
   "reparto": {
     "nuevo": "New",

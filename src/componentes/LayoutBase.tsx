@@ -1,5 +1,5 @@
 import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { IdiomaContexto } from '../contextos/idioma';
 import { TemaContexto } from '../contextos/tema';
 import { SesionContexto } from '../contextos/sesion';
@@ -8,7 +8,6 @@ import { useTranslation } from 'react-i18next';
 import { clsx } from 'clsx';
 import { AnimatePresence, motion } from 'framer-motion';
 import NavInferiorMovil from './NavInferiorMovil';
-import { useEffect, useState } from 'react';
 
 export default function LayoutBase() {
   const { t } = useTranslation();
@@ -38,11 +37,13 @@ export default function LayoutBase() {
 
   const links = [
     { to: '/inicio', label: t('nav.inicio') },
-    { to: '/acerca', label: t('nav.acerca') },
+    { to: '/dashboard', label: t('nav.dashboard') },
     { to: '/reparto', label: t('nav.reparto') },
     { to: '/prestamos', label: t('nav.prestamos') },
-    { to: '/selector-entidad', label: 'Entidades' },
-    { to: '/configuracion', label: 'Configuración' },
+    { to: '/bienes', label: t('nav.bienes') },
+    { to: '/selector-entidad', label: t('nav.entidades') },
+    { to: '/configuracion', label: t('nav.configuracion') },
+    { to: '/acerca', label: t('nav.acerca') },
   ];
 
   return (

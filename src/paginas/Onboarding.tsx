@@ -60,7 +60,7 @@ export default function Onboarding() {
                 if (!email.includes('@')) return;
                 setEstadoEmail('Enviando enlace…');
                 try {
-                  await supabase.auth.signInWithOtp({ email, options: { emailRedirectTo: location.origin } });
+                  await supabase!.auth.signInWithOtp({ email, options: { emailRedirectTo: location.origin } });
                   setEstadoEmail('Revisa tu email para continuar');
                 } catch {
                   setEstadoEmail('No se pudo enviar el email');

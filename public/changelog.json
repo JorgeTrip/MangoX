@@ -3,6 +3,36 @@
     {
       "fecha": "2026-03-03",
       "tipo": "feat",
+      "descripcion": "Módulo de Bienes patrimoniales (compra/venta con cuotas y ajuste manual)"
+    },
+    {
+      "fecha": "2026-03-03",
+      "tipo": "feat",
+      "descripcion": "Dashboard Analítico con navegación temporal (Día/Semana/Mes) y gráfico de torta por categoría"
+    },
+    {
+      "fecha": "2026-03-03",
+      "tipo": "feat",
+      "descripcion": "Datos demo realistas accesibles desde Landing para explorar la app sin registrarse"
+    },
+    {
+      "fecha": "2026-03-03",
+      "tipo": "feat",
+      "descripcion": "Dashboard con datos reales: patrimonio neto, serie temporal de 6 meses, torta por categoría"
+    },
+    {
+      "fecha": "2026-03-03",
+      "tipo": "feat",
+      "descripcion": "i18n completo ES/EN con claves de bienes, dashboard, navegación y demo"
+    },
+    {
+      "fecha": "2026-03-03",
+      "tipo": "fix",
+      "descripcion": "Corregido import duplicado en LayoutBase y eliminados archivos sobrantes de Vite"
+    },
+    {
+      "fecha": "2026-03-03",
+      "tipo": "feat",
       "descripcion": "Inicialización del proyecto MangoX con Vite, Tailwind, i18n y rutas básicas"
     }
   ]
