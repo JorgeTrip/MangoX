@@ -14,6 +14,8 @@ const NuevoGasto = lazy(() => import('./paginas/nuevo/NuevoGasto'));
 const NuevoPrestamo = lazy(() => import('./paginas/nuevo/NuevoPrestamo'));
 const NuevoIngreso = lazy(() => import('./paginas/nuevo/NuevoIngreso'));
 const NuevaOperacion = lazy(() => import('./paginas/nuevo/NuevaOperacion'));
+const Reparto = lazy(() => import('./paginas/Reparto'));
+const Prestamos = lazy(() => import('./paginas/Prestamos'));
 
 function conFallback(elemento: ReactNode) {
   return <Suspense fallback={<CargaRuta />}>{elemento}</Suspense>;
@@ -29,6 +31,8 @@ const router = createBrowserRouter([
       { path: '/onboarding', element: conFallback(<Onboarding />) },
       { path: '/acerca', element: conFallback(<RutaProtegida><Acerca /></RutaProtegida>) },
       { path: '/selector-entidad', element: conFallback(<RutaProtegida><SelectorEntidad /></RutaProtegida>) },
+      { path: '/reparto', element: conFallback(<RutaProtegida><Reparto /></RutaProtegida>) },
+      { path: '/prestamos', element: conFallback(<RutaProtegida><Prestamos /></RutaProtegida>) },
       { path: '/nuevo/gasto', element: conFallback(<RutaProtegida><NuevoGasto /></RutaProtegida>) },
       { path: '/nuevo/prestamo', element: conFallback(<RutaProtegida><NuevoPrestamo /></RutaProtegida>) },
       { path: '/nuevo/ingreso', element: conFallback(<RutaProtegida><NuevoIngreso /></RutaProtegida>) },

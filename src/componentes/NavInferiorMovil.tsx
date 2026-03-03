@@ -1,10 +1,10 @@
-import { House, BadgeHelp, Rocket, Building2, Settings } from 'lucide-react';
+import { House, BadgeHelp, Scale3D, Building2, Settings } from 'lucide-react';
 import { NavLink } from 'react-router-dom';
 import { clsx } from 'clsx';
 
 const items = [
   { to: '/inicio', label: 'Inicio', icono: House },
-  { to: '/onboarding', label: 'Setup', icono: Rocket },
+  { to: '/reparto', label: 'Reparto', icono: Scale3D },
   { to: '/selector-entidad', label: 'Entidades', icono: Building2 },
   { to: '/acerca', label: 'Acerca', icono: BadgeHelp },
   { to: '/configuracion', label: 'Config', icono: Settings },

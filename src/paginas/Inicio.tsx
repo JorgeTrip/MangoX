@@ -4,14 +4,38 @@ import { GraficoSkeleton, ListaSkeleton, TarjetaSkeleton } from '../componentes/
 import { useProgresoSuave } from '../hooks/useProgresoSuave';
 import { listarGastos, listarIngresos, listarOperaciones, listarPrestamos } from '../servicios/almacenLocal';
 import { calcularAlertasPresupuesto, categoriasBase } from '../servicios/presupuestos';
-import { motion } from 'framer-motion';
 import ActividadReciente from '../componentes/ActividadReciente';
+import { asegurarGastosFijosDelMes } from '../servicios/gastosFijos';
+import { Tarjeta, Barra, FilaResumen } from '../componentes/TarjetaPanel';
 
 const GraficoIngresosGastos = lazy(() => import('../componentes/GraficoIngresosGastos'));
 
 export default function Inicio() {
   const [cargando, setCargando] = useState(true);
   const [datos, setDatos] = useState<Array<{ mes: string; ingreso: number; gasto: number }>>([]);
+  const [modoGrafico, setModoGrafico] = useState<'linea' | 'barras'>('linea');
+  const [offsetMes, setOffsetMes] = useState(0);
+
+  const generarSerie = (desplazamiento: number) => {
+    const base = [
+      { mes: 'Ene', ingreso: 120, gasto: 92 },
+      { mes: 'Feb', ingreso: 134, gasto: 98 },
+      { mes: 'Mar', ingreso: 128, gasto: 118 },
+      { mes: 'Abr', ingreso: 154, gasto: 109 },
+      { mes: 'May', ingreso: 162, gasto: 114 },
+      { mes: 'Jun', ingreso: 140, gasto: 120 },
+      { mes: 'Jul', ingreso: 158, gasto: 127 },
+      { mes: 'Ago', ingreso: 170, gasto: 135 },
+      { mes: 'Sep', ingreso: 165, gasto: 130 },
+      { mes: 'Oct', ingreso: 172, gasto: 140 },
+      { mes: 'Nov', ingreso: 168, gasto: 138 },
+      { mes: 'Dic', ingreso: 180, gasto: 150 },
+    ];
+    const size = 6;
+    const inicio = ((desplazamiento % 12) + 12) % 12;
+    const sec = [...base.slice(inicio), ...base.slice(0, inicio)];
+    return sec.slice(0, size);
+  };
   const [gastosMes, setGastosMes] = useState(0);
   const [ingresosMes, setIngresosMes] = useState(0);
   const [ingresosFijos, setIngresosFijos] = useState(0);
@@ -24,6 +48,7 @@ export default function Inicio() {
 
   useEffect(() => {
     const timer = setTimeout(() => {
+      asegurarGastosFijosDelMes();
       const gastos = listarGastos();
       const ingresos = listarIngresos();
       const ops = listarOperaciones();
@@ -48,17 +73,12 @@ export default function Inicio() {
       setProximoVencimiento(
         proximo ? `${proximo.entidad} · ${proximo.pago!.toLocaleDateString('es-AR')}` : 'Sin vencimientos'
       );
-      setDatos([
-        { mes: 'Ene', ingreso: 120, gasto: 92 },
-        { mes: 'Feb', ingreso: 134, gasto: 98 },
-        { mes: 'Mar', ingreso: 128, gasto: 118 },
-        { mes: 'Abr', ingreso: 154, gasto: 109 },
-        { mes: 'May', ingreso: 162, gasto: 114 },
-      ]);
+      setDatos(generarSerie(offsetMes));
       setCargando(false);
     }, 600);
     return () => clearTimeout(timer);
-  }, []);
+  }, [offsetMes]);
+
 
   return (
     <div className="grid gap-5">
@@ -88,7 +108,18 @@ export default function Inicio() {
           ) : (
             <Tarjeta titulo="Ingresos vs Gastos" alto index={4}>
               <Suspense fallback={<GraficoSkeleton />}>
-                <GraficoIngresosGastos datos={datos} />
+                <div className="flex items-center gap-2 mb-2">
+                  <div className="rounded-full bg-white/40 dark:bg-white/10 px-2 py-1 text-xs">
+                    Vista:
+                    <button onClick={() => setModoGrafico('linea')} className={`ml-2 px-2 py-0.5 rounded-full ${modoGrafico === 'linea' ? 'bg-black/80 text-white dark:bg-white/15' : ''}`}>Línea</button>
+                    <button onClick={() => setModoGrafico('barras')} className={`ml-1 px-2 py-0.5 rounded-full ${modoGrafico === 'barras' ? 'bg-black/80 text-white dark:bg-white/15' : ''}`}>Barras</button>
+                  </div>
+                  <div className="ml-auto flex items-center gap-2">
+                    <button onClick={() => setOffsetMes((o) => (o + 11) % 12)} className="rounded-md px-2 py-1 bg-black/10 dark:bg-white/10 text-xs">◀</button>
+                    <button onClick={() => setOffsetMes((o) => (o + 1) % 12)} className="rounded-md px-2 py-1 bg-black/10 dark:bg-white/10 text-xs">▶</button>
+                  </div>
+                </div>
+                <GraficoIngresosGastos datos={datos} modo={modoGrafico} />
               </Suspense>
             </Tarjeta>
           )}
@@ -129,61 +160,5 @@ export default function Inicio() {
       </div>
       <FAB />
     </div>
-  );
-}
-
-function FilaResumen({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="rounded-lg px-3 py-2 bg-white/30 dark:bg-white/5 flex items-center justify-between gap-2">
-      <span className="opacity-80">{label}</span>
-      <span className="font-medium">{value}</span>
-    </div>
-  );
-}
-
-function Barra({ label, valor }: { label: string; valor: number }) {
-  return (
-    <div>
-      <div className="flex items-center justify-between mb-1">
-        <span>{label}</span>
-        <span className="opacity-70">{valor}%</span>
-      </div>
-      <div className="h-2 rounded-full bg-black/10 dark:bg-white/10">
-        <div className="h-full rounded-full bg-black/70 dark:bg-white/40" style={{ width: `${valor}%` }} />
-      </div>
-    </div>
-  );
-}
-
-function Tarjeta({
-  titulo,
-  alto = false,
-  contenido,
-  delta,
-  children,
-  className,
-  index = 0,
-}: {
-  titulo: string;
-  alto?: boolean;
-  contenido?: string;
-  delta?: string;
-  children?: React.ReactNode;
-  className?: string;
-  index?: number;
-}) {
-  return (
-    <motion.article
-      initial={{ opacity: 0, y: 10, scale: 0.99 }}
-      animate={{ opacity: 1, y: 0, scale: 1 }}
-      transition={{ duration: 0.28, delay: index * 0.03, ease: 'easeOut' }}
-      whileHover={{ y: -1 }}
-      className={`rounded-2xl p-4 glass dark:glass-dark surface-card min-h-32 ${className ?? ''}`}
-    >
-      <div className="font-medium mb-1">{titulo}</div>
-      {contenido && <div className="text-xl font-semibold">{contenido}</div>}
-      {delta && <div className="opacity-70 text-sm mt-1">{delta}</div>}
-      {alto ? <div className="mt-4">{children}</div> : null}
-    </motion.article>
   );
 }

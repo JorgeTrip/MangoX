@@ -23,6 +23,8 @@ export default function LayoutBase() {
   const links = [
     { to: '/inicio', label: t('nav.inicio') },
     { to: '/acerca', label: t('nav.acerca') },
+    { to: '/reparto', label: 'Reparto' },
+    { to: '/prestamos', label: 'Préstamos' },
     { to: '/selector-entidad', label: 'Entidades' },
     { to: '/configuracion', label: 'Configuración' },
   ];

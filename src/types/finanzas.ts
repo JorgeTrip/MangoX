@@ -39,6 +39,8 @@ export type Prestamo = {
   cuotaEstimada?: number;
   montoFijadoUsd?: number;
   ajusteManual?: number;
+  cuotasPagadas?: number;
+  postergadoHasta?: string;
 };
 
 export type Operacion = {
@@ -80,4 +82,24 @@ export type AlertaPresupuesto = {
   techo: number;
   porcentaje: number;
   estado: EstadoPresupuesto;
+};
+
+export type AportanteEvento = {
+  id: string;
+  nombre: string;
+  montoAportado: number;
+  personasAdicionales: number;
+  pagado: boolean;
+};
+
+export type EventoReparto = {
+  id: string;
+  nombre: string;
+  moneda: Moneda;
+  aportantes: AportanteEvento[];
+  total: number;
+  totalPersonas: number;
+  montoEquitativo: number;
+  creadoEn: string;
+  finalizado: boolean;
 };
