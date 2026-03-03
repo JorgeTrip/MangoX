@@ -1,0 +1,21 @@
+const en = {
+  app: {
+    titulo: 'MangoX',
+    subtitulo: 'Premium wealth management',
+  },
+  nav: {
+    inicio: 'Home',
+    onboarding: 'Onboarding',
+    acerca: 'About',
+  },
+  landing: {
+    hero_titulo: 'Control your net worth precisely',
+    cta: 'Get started',
+  },
+  acerca: {
+    titulo: 'About',
+    cambios: 'Recent changes',
+  },
+};
+
+export default en;

@@ -1,0 +1,21 @@
+const es = {
+  app: {
+    titulo: 'MangoX',
+    subtitulo: 'Gestión patrimonial premium',
+  },
+  nav: {
+    inicio: 'Inicio',
+    onboarding: 'Onboarding',
+    acerca: 'Acerca',
+  },
+  landing: {
+    hero_titulo: 'Controla tu patrimonio con precisión',
+    cta: 'Comenzar',
+  },
+  acerca: {
+    titulo: 'Acerca',
+    cambios: 'Cambios recientes',
+  },
+};
+
+export default es;
