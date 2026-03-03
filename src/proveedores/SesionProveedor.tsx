@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { SesionContexto } from '../contextos/sesion';
+import { supabase } from '../supabase/cliente';
 
 const KEY = 'mangox-auth';
 
@@ -12,6 +13,28 @@ export function SesionProveedor({ children }: { children: React.ReactNode }) {
       return false;
     }
   });
+  useEffect(() => {
+    let activo = true;
+    supabase?.auth.getSession().then((s) => {
+      if (!activo) return;
+      if (s.data.session) {
+        setAutenticado(true);
+      }
+    });
+    const sub = supabase?.auth.onAuthStateChange((_e, s) => {
+      setAutenticado(Boolean(s));
+      try {
+        if (s) localStorage.setItem(KEY, '1');
+        else localStorage.removeItem(KEY);
+      } catch {
+        void 0;
+      }
+    });
+    return () => {
+      activo = false;
+      sub?.data.subscription.unsubscribe();
+    };
+  }, []);
 
   const iniciarSesion = () => {
     setAutenticado(true);
@@ -29,6 +52,7 @@ export function SesionProveedor({ children }: { children: React.ReactNode }) {
     } catch (e) {
       void e;
     }
+    void supabase?.auth.signOut();
   };
 
   return <SesionContexto.Provider value={{ autenticado, iniciarSesion, cerrarSesion }}>{children}</SesionContexto.Provider>;

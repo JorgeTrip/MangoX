@@ -1,6 +1,7 @@
 import { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { SesionContexto } from '../contextos/sesion';
+import { supabase } from '../supabase/cliente';
 
 export default function Onboarding() {
   const [paso, setPaso] = useState(1);
@@ -10,6 +11,8 @@ export default function Onboarding() {
   const [tarjetaInicial, setTarjetaInicial] = useState('');
   const navegar = useNavigate();
   const { iniciarSesion } = useContext(SesionContexto);
+  const [email, setEmail] = useState('');
+  const [estadoEmail, setEstadoEmail] = useState('');
 
   const continuar = () => {
     if (!nombre.trim()) return;
@@ -49,7 +52,28 @@ export default function Onboarding() {
         <button onClick={continuar} className="rounded-lg px-4 py-2 bg-black/10 dark:bg-white/10">
           Saltar
         </button>
+        {supabase ? (
+          <div className="ml-auto flex items-center gap-2">
+            <input value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Email para ingresar" className="rounded-lg px-3 py-2 bg-white/80 dark:bg-white/10" />
+            <button
+              onClick={async () => {
+                if (!email.includes('@')) return;
+                setEstadoEmail('Enviando enlace…');
+                try {
+                  await supabase.auth.signInWithOtp({ email, options: { emailRedirectTo: location.origin } });
+                  setEstadoEmail('Revisa tu email para continuar');
+                } catch {
+                  setEstadoEmail('No se pudo enviar el email');
+                }
+              }}
+              className="rounded-lg px-4 py-2 bg-black/10 dark:bg-white/10"
+            >
+              Ingresar con email
+            </button>
+          </div>
+        ) : null}
       </div>
+      {estadoEmail ? <div className="opacity-70 text-sm mt-2">{estadoEmail}</div> : null}
     </div>
   );
 }

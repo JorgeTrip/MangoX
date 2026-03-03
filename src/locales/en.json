@@ -6,7 +6,9 @@
   "nav": {
     "inicio": "Home",
     "onboarding": "Onboarding",
-    "acerca": "About"
+    "acerca": "About",
+    "reparto": "Split",
+    "prestamos": "Loans"
   },
   "landing": {
     "hero_titulo": "Control your net worth precisely",
@@ -15,5 +17,39 @@
   "acerca": {
     "titulo": "About",
     "cambios": "Recent changes"
+  },
+  "reparto": {
+    "nuevo": "New",
+    "historial": "History",
+    "nombre_evento": "Event name",
+    "moneda": "Currency",
+    "nombre": "Name",
+    "monto_aportado": "Amount contributed",
+    "personas_adic": "People +",
+    "quitar": "Remove",
+    "agregar": "Add",
+    "calcular": "Calculate and continue",
+    "activos": "Active",
+    "finalizados": "Completed",
+    "resultados": "Results and tracking",
+    "equitativo": "Even share",
+    "cobra": "Receives",
+    "paga": "Pays",
+    "pagado": "Paid",
+    "finalizar": "Finish Event",
+    "sin_eventos": "No events"
+  },
+  "prestamos": {
+    "titulo": "Loans",
+    "actualizado": "Updated",
+    "cargando": "Loading…",
+    "cuota_estimada": "Estimated installment",
+    "restantes": "Remaining",
+    "postergado_hasta": "Postponed until",
+    "ajuste_manual": "Manual installment adjust",
+    "marcar_pagada": "Mark paid",
+    "mas_15": "+15 days",
+    "mas_1_mes": "+1 month",
+    "sin_prestamos": "No loans"
   }
 }

@@ -3,7 +3,8 @@ import { lazy, Suspense, useEffect, useState } from 'react';
 import { GraficoSkeleton, ListaSkeleton, TarjetaSkeleton } from '../componentes/Esqueleto';
 import { useProgresoSuave } from '../hooks/useProgresoSuave';
 import { listarGastos, listarIngresos, listarOperaciones, listarPrestamos } from '../servicios/almacenLocal';
-import { calcularAlertasPresupuesto, categoriasBase } from '../servicios/presupuestos';
+import { calcularAlertasPresupuesto } from '../servicios/presupuestos';
+import { listarCategorias } from '../servicios/categorias';
 import ActividadReciente from '../componentes/ActividadReciente';
 import { asegurarGastosFijosDelMes } from '../servicios/gastosFijos';
 import { Tarjeta, Barra, FilaResumen } from '../componentes/TarjetaPanel';
@@ -53,7 +54,7 @@ export default function Inicio() {
       const ingresos = listarIngresos();
       const ops = listarOperaciones();
       const pres = listarPrestamos();
-      const alertas = calcularAlertasPresupuesto(gastos, categoriasBase).filter((a) => a.estado !== 'normal');
+      const alertas = calcularAlertasPresupuesto(gastos, listarCategorias()).filter((a) => a.estado !== 'normal');
       const pagosEstimados = gastos
         .map((g) => ({ entidad: g.entidad, pago: g.fechaPagoEstimada ? new Date(g.fechaPagoEstimada) : null }))
         .filter((i) => i.pago && i.pago >= new Date())

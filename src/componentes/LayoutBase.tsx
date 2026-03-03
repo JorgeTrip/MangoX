@@ -8,6 +8,7 @@ import { useTranslation } from 'react-i18next';
 import { clsx } from 'clsx';
 import { AnimatePresence, motion } from 'framer-motion';
 import NavInferiorMovil from './NavInferiorMovil';
+import { useEffect, useState } from 'react';
 
 export default function LayoutBase() {
   const { t } = useTranslation();
@@ -15,6 +16,21 @@ export default function LayoutBase() {
   const { tema, alternar } = useContext(TemaContexto);
   const { autenticado, cerrarSesion } = useContext(SesionContexto);
   const [menuAbierto, setMenuAbierto] = useState(false);
+  const [toastMsg, setToastMsg] = useState('');
+  useEffect(() => {
+    let timer: number | null = null;
+    const onToast = (e: Event) => {
+      const ce = e as CustomEvent<string>;
+      setToastMsg(ce.detail);
+      if (timer) window.clearTimeout(timer);
+      timer = window.setTimeout(() => setToastMsg(''), 2500);
+    };
+    window.addEventListener('mangox:toast', onToast as EventListener);
+    return () => {
+      if (timer) window.clearTimeout(timer);
+      window.removeEventListener('mangox:toast', onToast as EventListener);
+    };
+  }, []);
   const location = useLocation();
   const navigate = useNavigate();
   const esRutaPublica = location.pathname === '/' || location.pathname === '/onboarding';
@@ -23,8 +39,8 @@ export default function LayoutBase() {
   const links = [
     { to: '/inicio', label: t('nav.inicio') },
     { to: '/acerca', label: t('nav.acerca') },
-    { to: '/reparto', label: 'Reparto' },
-    { to: '/prestamos', label: 'Préstamos' },
+    { to: '/reparto', label: t('nav.reparto') },
+    { to: '/prestamos', label: t('nav.prestamos') },
     { to: '/selector-entidad', label: 'Entidades' },
     { to: '/configuracion', label: 'Configuración' },
   ];
@@ -117,6 +133,11 @@ export default function LayoutBase() {
             <Outlet />
           </motion.div>
         </AnimatePresence>
+        {toastMsg ? (
+          <div className="fixed bottom-24 left-1/2 -translate-x-1/2 z-50">
+            <div className="chip bg-black/80 text-white dark:bg-white/15">{toastMsg}</div>
+          </div>
+        ) : null}
       </main>
       {mostrarNavegacionApp ? <NavInferiorMovil /> : null}
     </div>

@@ -2,10 +2,13 @@ import { useMemo, useState } from 'react';
 import { useProgresoSuave } from '../hooks/useProgresoSuave';
 import { actualizarPagado, balanceIndividual, crearEvento, finalizarEvento, guardarEvento, listarEventos } from '../servicios/reparto';
 import type { EventoReparto, Moneda } from '../types/finanzas';
+import { useTranslation } from 'react-i18next';
+import { toast } from '../notificaciones/toast';
 
 type Fila = { nombre: string; montoAportado: string; personasAdicionales: string };
 
 export default function Reparto() {
+  const { t } = useTranslation();
   const [nombre, setNombre] = useState('');
   const [moneda, setMoneda] = useState<Moneda>('ARS');
   const [filas, setFilas] = useState<Fila[]>([{ nombre: '', montoAportado: '', personasAdicionales: '0' }]);
@@ -38,6 +41,7 @@ export default function Reparto() {
     setEvento({ ...evento, aportantes: evento.aportantes.map((a) => (a.id === aportanteId ? { ...a, pagado: valor } : a)) });
     actualizarPagado(evento.id, aportanteId, valor);
     setHistorial(listarEventos());
+    toast(valor ? 'Marcado como pagado' : 'Marcado como pendiente');
   };
 
   const finalizar = async () => {
@@ -47,47 +51,48 @@ export default function Reparto() {
     setHistorial(listarEventos());
     setEvento(null);
     setTab('historial');
+    toast('Evento finalizado');
   };
 
   return (
     <div className="grid gap-4">
       <div className="rounded-3xl p-6 glass dark:glass-dark surface-card">
         <div className="flex items-center gap-2 mb-3">
-          <button onClick={() => setTab('nuevo')} className={`rounded-full px-3 py-1 text-sm ${tab === 'nuevo' ? 'bg-black/80 text-white dark:bg-white/15' : 'bg-black/10 dark:bg-white/10'}`}>Nuevo</button>
-          <button onClick={() => setTab('historial')} className={`rounded-full px-3 py-1 text-sm ${tab === 'historial' ? 'bg-black/80 text-white dark:bg-white/15' : 'bg-black/10 dark:bg-white/10'}`}>Historial</button>
+          <button onClick={() => setTab('nuevo')} className={`rounded-full px-3 py-1 text-sm ${tab === 'nuevo' ? 'bg-black/80 text-white dark:bg-white/15' : 'bg-black/10 dark:bg-white/10'}`}>{t('reparto.nuevo')}</button>
+          <button onClick={() => setTab('historial')} className={`rounded-full px-3 py-1 text-sm ${tab === 'historial' ? 'bg-black/80 text-white dark:bg-white/15' : 'bg-black/10 dark:bg-white/10'}`}>{t('reparto.historial')}</button>
         </div>
         {tab === 'nuevo' ? (
           <form onSubmit={crear} className="grid gap-3">
-            <input value={nombre} onChange={(e) => setNombre(e.target.value)} placeholder="Nombre de evento" className="rounded-lg px-3 py-2 bg-white/80 dark:bg-white/10" />
-            <select value={moneda} onChange={(e) => setMoneda(e.target.value as Moneda)} className="rounded-lg px-3 py-2 bg-white/80 dark:bg-white/10 w-40">
+            <input value={nombre} onChange={(e) => setNombre(e.target.value)} placeholder={t('reparto.nombre_evento')} className="rounded-lg px-3 py-2 bg-white/80 dark:bg-white/10" />
+            <select value={moneda} onChange={(e) => setMoneda(e.target.value as Moneda)} className="rounded-lg px-3 py-2 bg-white/80 dark:bg-white/10 w-40" aria-label={t('reparto.moneda')}>
               <option value="ARS">ARS</option>
               <option value="USD">USD</option>
               <option value="EUR">EUR</option>
             </select>
             <div className="rounded-xl p-3 bg-white/30 dark:bg-white/5">
               <div className="grid grid-cols-[2fr_1fr_1fr_auto] gap-2 items-center mb-2 text-sm opacity-70">
-                <div>Nombre</div>
-                <div>Monto aportado</div>
-                <div>Personas +</div>
+                <div>{t('reparto.nombre')}</div>
+                <div>{t('reparto.monto_aportado')}</div>
+                <div>{t('reparto.personas_adic')}</div>
                 <div />
               </div>
               {filas.map((fila, i) => (
                 <div key={i} className="grid grid-cols-[2fr_1fr_1fr_auto] gap-2 items-center mb-2">
-                  <input value={fila.nombre} onChange={(e) => setFilas((f) => f.map((x, idx) => (idx === i ? { ...x, nombre: e.target.value } : x)))} placeholder="Nombre" className="rounded-lg px-3 py-2 bg-white/80 dark:bg-white/10" />
-                  <input value={fila.montoAportado} onChange={(e) => setFilas((f) => f.map((x, idx) => (idx === i ? { ...x, montoAportado: e.target.value } : x)))} placeholder="Monto" inputMode="decimal" className="rounded-lg px-3 py-2 bg-white/80 dark:bg-white/10" />
+                  <input value={fila.nombre} onChange={(e) => setFilas((f) => f.map((x, idx) => (idx === i ? { ...x, nombre: e.target.value } : x)))} placeholder={t('reparto.nombre')} className="rounded-lg px-3 py-2 bg-white/80 dark:bg-white/10" />
+                  <input value={fila.montoAportado} onChange={(e) => setFilas((f) => f.map((x, idx) => (idx === i ? { ...x, montoAportado: e.target.value } : x)))} placeholder={t('reparto.monto_aportado')} inputMode="decimal" className="rounded-lg px-3 py-2 bg-white/80 dark:bg-white/10" />
                   <input value={fila.personasAdicionales} onChange={(e) => setFilas((f) => f.map((x, idx) => (idx === i ? { ...x, personasAdicionales: e.target.value } : x)))} placeholder="0" inputMode="numeric" className="rounded-lg px-3 py-2 bg-white/80 dark:bg-white/10" />
-                  <button type="button" onClick={() => quitarFila(i)} className="rounded-md px-3 py-2 bg-black/10 dark:bg-white/10">Quitar</button>
+                  <button type="button" onClick={() => quitarFila(i)} className="rounded-md px-3 py-2 bg-black/10 dark:bg-white/10">{t('reparto.quitar')}</button>
                 </div>
               ))}
-              <button type="button" onClick={agregarFila} className="rounded-md px-3 py-2 bg-black/10 dark:bg-white/10 mt-1">Agregar</button>
+              <button type="button" onClick={agregarFila} className="rounded-md px-3 py-2 bg-black/10 dark:bg-white/10 mt-1">{t('reparto.agregar')}</button>
             </div>
-            <button className="btn-primary" disabled={cargando}>{cargando ? 'Calculando…' : 'Calcular y continuar'}</button>
+            <button className="btn-primary" disabled={cargando}>{cargando ? 'Calculando…' : t('reparto.calcular')}</button>
           </form>
         ) : (
           <div className="grid gap-3">
-            <div className="text-sm opacity-80">Activos</div>
+            <div className="text-sm opacity-80">{t('reparto.activos')}</div>
             <ListaEventos eventos={activos} />
-            <div className="text-sm opacity-60 mt-2">Finalizados</div>
+            <div className="text-sm opacity-60 mt-2">{t('reparto.finalizados')}</div>
             <ListaEventos eventos={finalizados} finalizados />
           </div>
         )}
@@ -95,10 +100,10 @@ export default function Reparto() {
       {evento ? (
         <div className="rounded-3xl p-6 glass dark:glass-dark surface-card space-y-3">
           <div className="flex items-center justify-between">
-            <div className="font-medium">Resultados y seguimiento</div>
+            <div className="font-medium">{t('reparto.resultados')}</div>
             <span className="chip">{evento.nombre}</span>
           </div>
-          <div className="text-sm opacity-80">Equitativo: {evento.moneda} {evento.montoEquitativo.toLocaleString('es-AR', { maximumFractionDigits: 2 })}</div>
+          <div className="text-sm opacity-80">{t('reparto.equitativo')}: {evento.moneda} {evento.montoEquitativo.toLocaleString('es-AR', { maximumFractionDigits: 2 })}</div>
           <ul className="grid gap-2">
             {evento.aportantes.map((a) => {
               const bal = balanceIndividual(evento, a);
@@ -111,11 +116,11 @@ export default function Reparto() {
                   </div>
                   <div className="flex items-center gap-3">
                     <span className={positivo ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'}>
-                      {positivo ? 'Cobra' : 'Paga'} {evento.moneda} {Math.abs(bal).toLocaleString('es-AR', { maximumFractionDigits: 2 })}
+                      {positivo ? t('reparto.cobra') : t('reparto.paga')} {evento.moneda} {Math.abs(bal).toLocaleString('es-AR', { maximumFractionDigits: 2 })}
                     </span>
                     <label className="flex items-center gap-2 text-sm">
                       <input type="checkbox" checked={a.pagado} onChange={(e) => marcarPagado(a.id, e.target.checked)} />
-                      Pagado
+                      {t('reparto.pagado')}
                     </label>
                   </div>
                 </li>
@@ -123,7 +128,7 @@ export default function Reparto() {
             })}
           </ul>
           <div className="flex gap-2">
-            <button onClick={finalizar} className="btn-primary" disabled={cargando}>{cargando ? 'Finalizando…' : 'Finalizar Evento'}</button>
+            <button onClick={finalizar} className="btn-primary" disabled={cargando}>{cargando ? 'Finalizando…' : t('reparto.finalizar')}</button>
           </div>
         </div>
       ) : null}
@@ -132,7 +137,8 @@ export default function Reparto() {
 }
 
 function ListaEventos({ eventos, finalizados = false }: { eventos: EventoReparto[]; finalizados?: boolean }) {
-  if (eventos.length === 0) return <div className="rounded-lg px-3 py-2 bg-white/30 dark:bg-white/5 opacity-70 text-sm">Sin eventos</div>;
+  const { t } = useTranslation();
+  if (eventos.length === 0) return <div className="rounded-lg px-3 py-2 bg-white/30 dark:bg-white/5 opacity-70 text-sm">{t('reparto.sin_eventos')}</div>;
   return (
     <ul className="grid gap-2">
       {eventos.map((e) => (

@@ -6,7 +6,9 @@
   "nav": {
     "inicio": "Inicio",
     "onboarding": "Onboarding",
-    "acerca": "Acerca"
+    "acerca": "Acerca",
+    "reparto": "Reparto",
+    "prestamos": "Préstamos"
   },
   "landing": {
     "hero_titulo": "Controla tu patrimonio con precisión",
@@ -15,5 +17,39 @@
   "acerca": {
     "titulo": "Acerca",
     "cambios": "Cambios recientes"
+  },
+  "reparto": {
+    "nuevo": "Nuevo",
+    "historial": "Historial",
+    "nombre_evento": "Nombre de evento",
+    "moneda": "Moneda",
+    "nombre": "Nombre",
+    "monto_aportado": "Monto aportado",
+    "personas_adic": "Personas +",
+    "quitar": "Quitar",
+    "agregar": "Agregar",
+    "calcular": "Calcular y continuar",
+    "activos": "Activos",
+    "finalizados": "Finalizados",
+    "resultados": "Resultados y seguimiento",
+    "equitativo": "Equitativo",
+    "cobra": "Cobra",
+    "paga": "Paga",
+    "pagado": "Pagado",
+    "finalizar": "Finalizar Evento",
+    "sin_eventos": "Sin eventos"
+  },
+  "prestamos": {
+    "titulo": "Préstamos",
+    "actualizado": "Actualizado",
+    "cargando": "Cargando…",
+    "cuota_estimada": "Cuota estimada",
+    "restantes": "Restantes",
+    "postergado_hasta": "Postergado hasta",
+    "ajuste_manual": "Ajuste manual cuota",
+    "marcar_pagada": "Marcar pagada",
+    "mas_15": "+15 días",
+    "mas_1_mes": "+1 mes",
+    "sin_prestamos": "Sin préstamos"
   }
 }
