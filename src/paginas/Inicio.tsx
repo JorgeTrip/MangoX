@@ -1,10 +1,11 @@
 import FAB from '../componentes/FAB';
-import { useEffect, useState } from 'react';
+import { lazy, Suspense, useEffect, useState } from 'react';
 import { GraficoSkeleton, ListaSkeleton, TarjetaSkeleton } from '../componentes/Esqueleto';
-import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 import { useProgresoSuave } from '../hooks/useProgresoSuave';
 import { listarGastos, listarOperaciones, listarPrestamos } from '../servicios/almacenLocal';
 import { motion } from 'framer-motion';
+
+const GraficoIngresosGastos = lazy(() => import('../componentes/GraficoIngresosGastos'));
 
 export default function Inicio() {
   const [cargando, setCargando] = useState(true);
@@ -61,17 +62,9 @@ export default function Inicio() {
             <GraficoSkeleton />
           ) : (
             <Tarjeta titulo="Ingresos vs Gastos" alto index={4}>
-              <div className="h-72">
-                <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={datos}>
-                    <XAxis dataKey="mes" stroke="#9ca3af" />
-                    <YAxis stroke="#9ca3af" />
-                    <Tooltip />
-                    <Line type="monotone" dataKey="ingreso" stroke="#10b981" strokeWidth={2.4} dot={false} />
-                    <Line type="monotone" dataKey="gasto" stroke="#ef4444" strokeWidth={2.4} dot={false} />
-                  </LineChart>
-                </ResponsiveContainer>
-              </div>
+              <Suspense fallback={<GraficoSkeleton />}>
+                <GraficoIngresosGastos datos={datos} />
+              </Suspense>
             </Tarjeta>
           )}
           {cargando ? (
