@@ -1,0 +1,27 @@
+@import "tailwindcss";
+
+:root {
+  color-scheme: light dark;
+}
+
+html, body, #root {
+  height: 100%;
+}
+
+.bg-app-claro {
+  background-color: #F5F5F7;
+}
+
+.bg-app-oscuro {
+  background-color: #1C1C1E;
+}
+
+.glass {
+  backdrop-filter: blur(12px);
+  background: color-mix(in oklab, white 8%, transparent);
+}
+
+.glass-dark {
+  backdrop-filter: blur(12px);
+  background: color-mix(in oklab, black 20%, transparent);
+}

@@ -1,0 +1,9 @@
+{
+  "cambios": [
+    {
+      "fecha": "2026-03-03",
+      "tipo": "feat",
+      "descripcion": "Inicialización del proyecto MangoX con Vite, Tailwind, i18n y rutas básicas"
+    }
+  ]
+}
