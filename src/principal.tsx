@@ -4,16 +4,18 @@ import './index.css';
 import Rutas from './rutas';
 import { IdiomaProveedor } from './proveedores/IdiomaProveedor';
 import { TemaProveedor } from './proveedores/TemaProveedor';
+import { SesionProveedor } from './proveedores/SesionProveedor';
 
 const root = document.getElementById('root')!;
 
 createRoot(root).render(
   <StrictMode>
     <IdiomaProveedor>
-      <TemaProveedor>
-        <Rutas />
-      </TemaProveedor>
+      <SesionProveedor>
+        <TemaProveedor>
+          <Rutas />
+        </TemaProveedor>
+      </SesionProveedor>
     </IdiomaProveedor>
   </StrictMode>
 );
-

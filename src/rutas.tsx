@@ -2,6 +2,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { lazy, Suspense, type ReactNode } from 'react';
 import LayoutBase from './componentes/LayoutBase';
 import CargaRuta from './componentes/CargaRuta';
+import RutaProtegida from './componentes/RutaProtegida';
 
 const Landing = lazy(() => import('./paginas/Landing'));
 const Inicio = lazy(() => import('./paginas/Inicio'));
@@ -23,16 +24,16 @@ const router = createBrowserRouter([
     element: <LayoutBase />,
     children: [
       { index: true, element: conFallback(<Landing />) },
-      { path: '/inicio', element: conFallback(<Inicio />) },
+      { path: '/inicio', element: conFallback(<RutaProtegida><Inicio /></RutaProtegida>) },
       { path: '/onboarding', element: conFallback(<Onboarding />) },
-      { path: '/acerca', element: conFallback(<Acerca />) },
-      { path: '/selector-entidad', element: conFallback(<SelectorEntidad />) },
-      { path: '/nuevo/gasto', element: conFallback(<NuevoGasto />) },
-      { path: '/nuevo/prestamo', element: conFallback(<NuevoPrestamo />) },
-      { path: '/nuevo/operacion', element: conFallback(<NuevaOperacion />) },
+      { path: '/acerca', element: conFallback(<RutaProtegida><Acerca /></RutaProtegida>) },
+      { path: '/selector-entidad', element: conFallback(<RutaProtegida><SelectorEntidad /></RutaProtegida>) },
+      { path: '/nuevo/gasto', element: conFallback(<RutaProtegida><NuevoGasto /></RutaProtegida>) },
+      { path: '/nuevo/prestamo', element: conFallback(<RutaProtegida><NuevoPrestamo /></RutaProtegida>) },
+      { path: '/nuevo/operacion', element: conFallback(<RutaProtegida><NuevaOperacion /></RutaProtegida>) },
     ],
   },
-  { path: '/configuracion', element: <LayoutBase />, children: [{ index: true, element: conFallback(<Configuracion />) }] },
+  { path: '/configuracion', element: <LayoutBase />, children: [{ index: true, element: conFallback(<RutaProtegida><Configuracion /></RutaProtegida>) }] },
 ]);
 
 export default function Rutas() {

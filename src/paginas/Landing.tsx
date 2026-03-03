@@ -18,8 +18,8 @@ export default function Landing() {
             {t('landing.cta')}
             <ArrowRight className="size-4" />
           </Link>
-          <Link to="/inicio" className="inline-flex items-center gap-2 rounded-full px-5 py-3 border border-white/25 hover:bg-black/5 transition dark:hover:bg-white/10">
-            Ver demo
+          <Link to="/onboarding" className="inline-flex items-center gap-2 rounded-full px-5 py-3 border border-white/25 hover:bg-black/5 transition dark:hover:bg-white/10">
+            Ver recorrido
           </Link>
         </div>
       </section>

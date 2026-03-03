@@ -1,9 +1,17 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { SesionContexto } from '../contextos/sesion';
 
 export default function Onboarding() {
   const [nombre, setNombre] = useState('');
   const navegar = useNavigate();
+  const { iniciarSesion } = useContext(SesionContexto);
+
+  const continuar = () => {
+    iniciarSesion();
+    navegar('/inicio');
+  };
+
   return (
     <div className="max-w-2xl mx-auto rounded-3xl p-7 glass dark:glass-dark surface-card">
       <div className="flex items-center justify-between">
@@ -20,10 +28,10 @@ export default function Onboarding() {
         <input placeholder="Ingreso estimado mensual" className="w-full rounded-lg px-3 py-2 bg-white/80 dark:bg-white/10" />
       </div>
       <div className="mt-6 flex gap-2">
-        <button onClick={() => navegar('/inicio')} className="btn-primary">
+        <button onClick={continuar} className="btn-primary">
           Continuar
         </button>
-        <button onClick={() => navegar('/inicio')} className="rounded-lg px-4 py-2 bg-black/10 dark:bg-white/10">
+        <button onClick={continuar} className="rounded-lg px-4 py-2 bg-black/10 dark:bg-white/10">
           Saltar
         </button>
       </div>

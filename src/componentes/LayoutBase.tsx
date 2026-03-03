@@ -1,7 +1,8 @@
-import { Link, NavLink, Outlet, useLocation } from 'react-router-dom';
+import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { useContext, useState } from 'react';
 import { IdiomaContexto } from '../contextos/idioma';
 import { TemaContexto } from '../contextos/tema';
+import { SesionContexto } from '../contextos/sesion';
 import { Menu, Sun, Moon, X } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { clsx } from 'clsx';
@@ -12,12 +13,15 @@ export default function LayoutBase() {
   const { t } = useTranslation();
   const { cambiar, idioma } = useContext(IdiomaContexto);
   const { tema, alternar } = useContext(TemaContexto);
+  const { autenticado, cerrarSesion } = useContext(SesionContexto);
   const [menuAbierto, setMenuAbierto] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
+  const esRutaPublica = location.pathname === '/' || location.pathname === '/onboarding';
+  const mostrarNavegacionApp = autenticado && !esRutaPublica;
 
   const links = [
     { to: '/inicio', label: t('nav.inicio') },
-    { to: '/onboarding', label: t('nav.onboarding') },
     { to: '/acerca', label: t('nav.acerca') },
     { to: '/selector-entidad', label: 'Entidades' },
     { to: '/configuracion', label: 'Configuración' },
@@ -32,9 +36,11 @@ export default function LayoutBase() {
       <header className="sticky top-0 z-30 glass dark:glass-dark border-b border-white/15">
         <div className="mx-auto max-w-7xl px-6 py-3 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <button onClick={() => setMenuAbierto((v) => !v)} className="sm:hidden rounded-full p-2 hover:bg-black/5 dark:hover:bg-white/10 transition">
-              {menuAbierto ? <X className="size-5 opacity-70" /> : <Menu className="size-5 opacity-70" />}
-            </button>
+            {mostrarNavegacionApp ? (
+              <button onClick={() => setMenuAbierto((v) => !v)} className="sm:hidden rounded-full p-2 hover:bg-black/5 dark:hover:bg-white/10 transition">
+                {menuAbierto ? <X className="size-5 opacity-70" /> : <Menu className="size-5 opacity-70" />}
+              </button>
+            ) : null}
             <Link to="/" className="font-semibold tracking-tight text-lg">
               {t('app.titulo')}
             </Link>
@@ -48,27 +54,44 @@ export default function LayoutBase() {
               <option value="es">ES</option>
               <option value="en">EN</option>
             </select>
+            {autenticado ? (
+              <button
+                onClick={() => {
+                  cerrarSesion();
+                  navigate('/');
+                }}
+                className="rounded-lg px-3 py-1.5 text-sm border border-white/20 hover:bg-black/5 dark:hover:bg-white/10"
+              >
+                Salir
+              </button>
+            ) : (
+              <Link to="/onboarding" className="rounded-lg px-3 py-1.5 text-sm border border-white/20 hover:bg-black/5 dark:hover:bg-white/10">
+                Ingresar
+              </Link>
+            )}
           </div>
         </div>
-        <div className="mx-auto max-w-7xl px-6 pb-3 hidden sm:block">
-          <nav className="flex items-center gap-2 flex-wrap">
-            {links.map((link) => (
-              <NavLink
-                key={link.to}
-                to={link.to}
-                className={({ isActive }) =>
-                  clsx(
-                    'rounded-full px-3 py-1.5 text-sm transition border',
-                    isActive ? 'bg-black/80 text-white border-black/70 dark:bg-white/15 dark:border-white/30' : 'border-white/20 hover:bg-black/5 dark:hover:bg-white/10'
-                  )
-                }
-              >
-                {link.label}
-              </NavLink>
-            ))}
-          </nav>
-        </div>
-        {menuAbierto && (
+        {mostrarNavegacionApp ? (
+          <div className="mx-auto max-w-7xl px-6 pb-3 hidden sm:block">
+            <nav className="flex items-center gap-2 flex-wrap">
+              {links.map((link) => (
+                <NavLink
+                  key={link.to}
+                  to={link.to}
+                  className={({ isActive }) =>
+                    clsx(
+                      'rounded-full px-3 py-1.5 text-sm transition border',
+                      isActive ? 'bg-black/80 text-white border-black/70 dark:bg-white/15 dark:border-white/30' : 'border-white/20 hover:bg-black/5 dark:hover:bg-white/10'
+                    )
+                  }
+                >
+                  {link.label}
+                </NavLink>
+              ))}
+            </nav>
+          </div>
+        ) : null}
+        {mostrarNavegacionApp && menuAbierto ? (
           <div className="sm:hidden mx-4 mb-4 rounded-2xl p-3 glass dark:glass-dark border border-white/20">
             <nav className="grid gap-2">
               {links.map((link) => (
@@ -78,7 +101,7 @@ export default function LayoutBase() {
               ))}
             </nav>
           </div>
-        )}
+        ) : null}
       </header>
       <main className="relative z-10 mx-auto max-w-7xl px-6 py-10 pb-28 sm:pb-10">
         <AnimatePresence mode="wait">
@@ -93,7 +116,7 @@ export default function LayoutBase() {
           </motion.div>
         </AnimatePresence>
       </main>
-      <NavInferiorMovil />
+      {mostrarNavegacionApp ? <NavInferiorMovil /> : null}
     </div>
   );
 }
