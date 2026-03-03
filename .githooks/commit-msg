@@ -1,5 +1,32 @@
 #!/bin/sh
 mensaje="$(head -n 1 "$1" | tr -d '\r')"
-echo "$mensaje" | grep -Eiq '^se[[:space:]]+' && exit 0
-echo "El mensaje debe comenzar con 'Se ' y estar en pasado impersonal."
+largo="$(printf "%s" "$mensaje" | awk '{ print length }')"
+detalle="$(tail -n +2 "$1" | sed '/^[[:space:]]*$/d')"
+archivos="$(git diff --cached --name-only | sed '/^[[:space:]]*$/d' | wc -l | tr -d ' ')"
+
+echo "$mensaje" | grep -Eiq '^se[[:space:]]+' || {
+  echo "El asunto debe comenzar con 'Se ' y usar pasado impersonal."
+  exit 1
+}
+
+[ "$largo" -ge 24 ] || {
+  echo "El asunto es muy corto. Escribe un resumen más descriptivo."
+  exit 1
+}
+
+[ "$largo" -le 110 ] || {
+  echo "El asunto es demasiado largo. Mantén el resumen en una sola línea clara."
+  exit 1
+}
+
+[ "$archivos" -lt 4 ] && exit 0
+
+[ -n "$detalle" ] && exit 0
+
+echo "Este commit toca varios archivos. Agrega cuerpo descriptivo después del asunto."
+echo "Sugerencia:"
+echo "Se implementó ..."
+echo
+echo "- Se añadió ..."
+echo "- Se ajustó ..."
 exit 1

@@ -14,6 +14,8 @@ export default function Inicio() {
   const [datos, setDatos] = useState<Array<{ mes: string; ingreso: number; gasto: number }>>([]);
   const [gastosMes, setGastosMes] = useState(0);
   const [ingresosMes, setIngresosMes] = useState(0);
+  const [ingresosFijos, setIngresosFijos] = useState(0);
+  const [ingresosPendientes, setIngresosPendientes] = useState(0);
   const [operaciones, setOperaciones] = useState(0);
   const [prestamos, setPrestamos] = useState(0);
   const [proximoVencimiento, setProximoVencimiento] = useState('Sin vencimientos');
@@ -34,6 +36,8 @@ export default function Inicio() {
       const proximo = pagosEstimados[0];
       setGastosMes(gastos.reduce((acc, g) => acc + g.monto, 0));
       setIngresosMes(ingresos.reduce((acc, i) => acc + i.monto, 0));
+      setIngresosFijos(ingresos.filter((i) => i.esFijo).length);
+      setIngresosPendientes(ingresos.filter((i) => !i.esCobroReal).length);
       setOperaciones(ops.length);
       setPrestamos(pres.length);
       setAlertaPresupuesto(
@@ -110,6 +114,8 @@ export default function Inicio() {
                 <FilaResumen label="Operaciones registradas" value={String(operaciones)} />
                 <FilaResumen label="Préstamos activos" value={String(prestamos)} />
                 <FilaResumen label="Ingresos estimados vs gastos" value={`$ ${ingresosMes.toLocaleString('es-AR')} / $ ${gastosMes.toLocaleString('es-AR')}`} />
+                <FilaResumen label="Ingresos fijos registrados" value={String(ingresosFijos)} />
+                <FilaResumen label="Ingresos pendientes de cobro" value={String(ingresosPendientes)} />
                 <FilaResumen label="Monedas activas" value="ARS · USD · EUR" />
               </div>
             </Tarjeta>
