@@ -1,8 +1,9 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import FormularioBase from '../../componentes/FormularioBase';
 import { agregarGastos } from '../../servicios/almacenLocal';
 import { crearGastosDesdeTarjeta } from '../../servicios/gastos';
+import { listarEntidadesFinancieras } from '../../servicios/entidades';
 import type { MarcaTarjeta, Moneda } from '../../types/finanzas';
 
 export default function NuevoGasto() {
@@ -18,6 +19,14 @@ export default function NuevoGasto() {
   const [diaCierreTarjeta, setDiaCierreTarjeta] = useState('28');
   const [diaVencimientoTarjeta, setDiaVencimientoTarjeta] = useState('5');
   const [esGastoFijo, setEsGastoFijo] = useState(false);
+  const [sugeridas, setSugeridas] = useState<string[]>([]);
+  useEffect(() => {
+    let m = true;
+    listarEntidadesFinancieras().then((l) => m && setSugeridas(l));
+    return () => {
+      m = false;
+    };
+  }, []);
 
   const guardar = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -52,7 +61,14 @@ export default function NuevoGasto() {
       <input value={monto} onChange={(e) => setMonto(e.target.value)} placeholder="Monto" inputMode="decimal" className="rounded-lg px-3 py-2 bg-white/80 dark:bg-white/10" />
       <div className="grid sm:grid-cols-3 gap-3">
         <input value={categoria} onChange={(e) => setCategoria(e.target.value)} placeholder="Categoría" className="rounded-lg px-3 py-2 bg-white/80 dark:bg-white/10" />
-        <input value={entidad} onChange={(e) => setEntidad(e.target.value)} placeholder="Entidad" className="rounded-lg px-3 py-2 bg-white/80 dark:bg-white/10" />
+        <div>
+          <input value={entidad} onChange={(e) => setEntidad(e.target.value)} placeholder="Entidad" className="w-full rounded-lg px-3 py-2 bg-white/80 dark:bg-white/10" list="lista-entidades" />
+          <datalist id="lista-entidades">
+            {sugeridas.map((e) => (
+              <option key={e} value={e} />
+            ))}
+          </datalist>
+        </div>
         <select value={moneda} onChange={(e) => setMoneda(e.target.value as Moneda)} className="rounded-lg px-3 py-2 bg-white/80 dark:bg-white/10">
           <option value="ARS">ARS</option>
           <option value="USD">USD</option>
