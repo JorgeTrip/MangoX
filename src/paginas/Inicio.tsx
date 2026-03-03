@@ -3,7 +3,9 @@ import { lazy, Suspense, useEffect, useState } from 'react';
 import { GraficoSkeleton, ListaSkeleton, TarjetaSkeleton } from '../componentes/Esqueleto';
 import { useProgresoSuave } from '../hooks/useProgresoSuave';
 import { listarGastos, listarOperaciones, listarPrestamos } from '../servicios/almacenLocal';
+import { calcularAlertasPresupuesto, categoriasBase } from '../servicios/presupuestos';
 import { motion } from 'framer-motion';
+import ActividadReciente from '../componentes/ActividadReciente';
 
 const GraficoIngresosGastos = lazy(() => import('../componentes/GraficoIngresosGastos'));
 
@@ -13,6 +15,8 @@ export default function Inicio() {
   const [gastosMes, setGastosMes] = useState(0);
   const [operaciones, setOperaciones] = useState(0);
   const [prestamos, setPrestamos] = useState(0);
+  const [proximoVencimiento, setProximoVencimiento] = useState('Sin vencimientos');
+  const [alertaPresupuesto, setAlertaPresupuesto] = useState<string | null>(null);
   const { cargando: sincr, run } = useProgresoSuave(1200);
 
   useEffect(() => {
@@ -20,9 +24,23 @@ export default function Inicio() {
       const gastos = listarGastos();
       const ops = listarOperaciones();
       const pres = listarPrestamos();
+      const alertas = calcularAlertasPresupuesto(gastos, categoriasBase).filter((a) => a.estado !== 'normal');
+      const pagosEstimados = gastos
+        .map((g) => ({ entidad: g.entidad, pago: g.fechaPagoEstimada ? new Date(g.fechaPagoEstimada) : null }))
+        .filter((i) => i.pago && i.pago >= new Date())
+        .sort((a, b) => (a.pago!.getTime() - b.pago!.getTime()));
+      const proximo = pagosEstimados[0];
       setGastosMes(gastos.reduce((acc, g) => acc + g.monto, 0));
       setOperaciones(ops.length);
       setPrestamos(pres.length);
+      setAlertaPresupuesto(
+        alertas[0]
+          ? `${alertas[0].categoria}: ${Math.round(alertas[0].porcentaje)}% del techo`
+          : null
+      );
+      setProximoVencimiento(
+        proximo ? `${proximo.entidad} · ${proximo.pago!.toLocaleDateString('es-AR')}` : 'Sin vencimientos'
+      );
       setDatos([
         { mes: 'Ene', ingreso: 120, gasto: 92 },
         { mes: 'Feb', ingreso: 134, gasto: 98 },
@@ -55,8 +73,8 @@ export default function Inicio() {
         <div className="grid gap-4 xl:col-span-8">
           <div className="grid md:grid-cols-3 gap-4">
             {cargando ? <TarjetaSkeleton /> : <Tarjeta titulo="Saldo consolidado" contenido="$ 1.246.300" delta="+6.2% vs mes anterior" index={1} />}
-            {cargando ? <TarjetaSkeleton /> : <Tarjeta titulo="Gastos del mes" contenido={`$ ${gastosMes.toLocaleString('es-AR') || '0'}`} delta="Controlado" index={2} />}
-            {cargando ? <TarjetaSkeleton /> : <Tarjeta titulo="Próximo vencimiento" contenido="Visa Platinum · 05/04" delta="En 9 días" index={3} />}
+            {cargando ? <TarjetaSkeleton /> : <Tarjeta titulo="Gastos del mes" contenido={`$ ${gastosMes.toLocaleString('es-AR') || '0'}`} delta={alertaPresupuesto ?? 'Controlado'} index={2} />}
+            {cargando ? <TarjetaSkeleton /> : <Tarjeta titulo="Próximo vencimiento" contenido={proximoVencimiento} delta="Calculado por cierre de tarjeta" index={3} />}
           </div>
           {cargando ? (
             <GraficoSkeleton />
@@ -88,6 +106,7 @@ export default function Inicio() {
               <div className="grid gap-3">
                 <FilaResumen label="Operaciones registradas" value={String(operaciones)} />
                 <FilaResumen label="Préstamos activos" value={String(prestamos)} />
+                <FilaResumen label="Ingresos estimados vs gastos" value={`$ 1.620.000 / $ ${gastosMes.toLocaleString('es-AR')}`} />
                 <FilaResumen label="Monedas activas" value="ARS · USD · EUR" />
               </div>
             </Tarjeta>
@@ -95,13 +114,7 @@ export default function Inicio() {
           {cargando ? (
             <ListaSkeleton lineas={3} />
           ) : (
-            <Tarjeta titulo="Actividad reciente" alto index={7}>
-              <ul className="grid gap-2 text-sm">
-                <li className="rounded-lg px-3 py-2 bg-white/30 dark:bg-white/5">Compra supermercado · ARS 24.500</li>
-                <li className="rounded-lg px-3 py-2 bg-white/30 dark:bg-white/5">Transferencia ahorro · USD 120</li>
-                <li className="rounded-lg px-3 py-2 bg-white/30 dark:bg-white/5">Pago tarjeta · ARS 80.000</li>
-              </ul>
-            </Tarjeta>
+            <Tarjeta titulo="Actividad reciente" alto index={7}><ActividadReciente /></Tarjeta>
           )}
         </aside>
       </div>
