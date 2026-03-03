@@ -6,6 +6,7 @@ import { Menu, Sun, Moon, X } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { clsx } from 'clsx';
 import { AnimatePresence, motion } from 'framer-motion';
+import NavInferiorMovil from './NavInferiorMovil';
 
 export default function LayoutBase() {
   const { t } = useTranslation();
@@ -79,7 +80,7 @@ export default function LayoutBase() {
           </div>
         )}
       </header>
-      <main className="relative z-10 mx-auto max-w-7xl px-6 py-10">
+      <main className="relative z-10 mx-auto max-w-7xl px-6 py-10 pb-28 sm:pb-10">
         <AnimatePresence mode="wait">
           <motion.div
             key={location.pathname}
@@ -92,6 +93,7 @@ export default function LayoutBase() {
           </motion.div>
         </AnimatePresence>
       </main>
+      <NavInferiorMovil />
     </div>
   );
 }
