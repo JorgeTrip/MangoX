@@ -12,6 +12,7 @@ const SelectorEntidad = lazy(() => import('./paginas/SelectorEntidad'));
 const Configuracion = lazy(() => import('./paginas/Configuracion'));
 const NuevoGasto = lazy(() => import('./paginas/nuevo/NuevoGasto'));
 const NuevoPrestamo = lazy(() => import('./paginas/nuevo/NuevoPrestamo'));
+const NuevoIngreso = lazy(() => import('./paginas/nuevo/NuevoIngreso'));
 const NuevaOperacion = lazy(() => import('./paginas/nuevo/NuevaOperacion'));
 
 function conFallback(elemento: ReactNode) {
@@ -30,6 +31,7 @@ const router = createBrowserRouter([
       { path: '/selector-entidad', element: conFallback(<RutaProtegida><SelectorEntidad /></RutaProtegida>) },
       { path: '/nuevo/gasto', element: conFallback(<RutaProtegida><NuevoGasto /></RutaProtegida>) },
       { path: '/nuevo/prestamo', element: conFallback(<RutaProtegida><NuevoPrestamo /></RutaProtegida>) },
+      { path: '/nuevo/ingreso', element: conFallback(<RutaProtegida><NuevoIngreso /></RutaProtegida>) },
       { path: '/nuevo/operacion', element: conFallback(<RutaProtegida><NuevaOperacion /></RutaProtegida>) },
     ],
   },

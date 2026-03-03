@@ -2,7 +2,7 @@ import FAB from '../componentes/FAB';
 import { lazy, Suspense, useEffect, useState } from 'react';
 import { GraficoSkeleton, ListaSkeleton, TarjetaSkeleton } from '../componentes/Esqueleto';
 import { useProgresoSuave } from '../hooks/useProgresoSuave';
-import { listarGastos, listarOperaciones, listarPrestamos } from '../servicios/almacenLocal';
+import { listarGastos, listarIngresos, listarOperaciones, listarPrestamos } from '../servicios/almacenLocal';
 import { calcularAlertasPresupuesto, categoriasBase } from '../servicios/presupuestos';
 import { motion } from 'framer-motion';
 import ActividadReciente from '../componentes/ActividadReciente';
@@ -13,6 +13,7 @@ export default function Inicio() {
   const [cargando, setCargando] = useState(true);
   const [datos, setDatos] = useState<Array<{ mes: string; ingreso: number; gasto: number }>>([]);
   const [gastosMes, setGastosMes] = useState(0);
+  const [ingresosMes, setIngresosMes] = useState(0);
   const [operaciones, setOperaciones] = useState(0);
   const [prestamos, setPrestamos] = useState(0);
   const [proximoVencimiento, setProximoVencimiento] = useState('Sin vencimientos');
@@ -22,6 +23,7 @@ export default function Inicio() {
   useEffect(() => {
     const timer = setTimeout(() => {
       const gastos = listarGastos();
+      const ingresos = listarIngresos();
       const ops = listarOperaciones();
       const pres = listarPrestamos();
       const alertas = calcularAlertasPresupuesto(gastos, categoriasBase).filter((a) => a.estado !== 'normal');
@@ -31,6 +33,7 @@ export default function Inicio() {
         .sort((a, b) => (a.pago!.getTime() - b.pago!.getTime()));
       const proximo = pagosEstimados[0];
       setGastosMes(gastos.reduce((acc, g) => acc + g.monto, 0));
+      setIngresosMes(ingresos.reduce((acc, i) => acc + i.monto, 0));
       setOperaciones(ops.length);
       setPrestamos(pres.length);
       setAlertaPresupuesto(
@@ -106,7 +109,7 @@ export default function Inicio() {
               <div className="grid gap-3">
                 <FilaResumen label="Operaciones registradas" value={String(operaciones)} />
                 <FilaResumen label="Préstamos activos" value={String(prestamos)} />
-                <FilaResumen label="Ingresos estimados vs gastos" value={`$ 1.620.000 / $ ${gastosMes.toLocaleString('es-AR')}`} />
+                <FilaResumen label="Ingresos estimados vs gastos" value={`$ ${ingresosMes.toLocaleString('es-AR')} / $ ${gastosMes.toLocaleString('es-AR')}`} />
                 <FilaResumen label="Monedas activas" value="ARS · USD · EUR" />
               </div>
             </Tarjeta>

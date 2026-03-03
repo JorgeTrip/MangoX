@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { Plus, CreditCard, HandCoins, ShoppingBag, Cog } from 'lucide-react';
+import { Plus, CreditCard, HandCoins, ShoppingBag, Cog, Wallet } from 'lucide-react';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
@@ -10,6 +10,7 @@ export default function FAB() {
       <div className="relative">
         <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: abierto ? 1 : 0, scale: abierto ? 1 : 0.95 }} className="absolute bottom-16 right-0 flex flex-col gap-2">
           <Accion to="/nuevo/gasto" icono={<CreditCard className="size-4" />} texto="Nuevo Gasto" />
+          <Accion to="/nuevo/ingreso" icono={<Wallet className="size-4" />} texto="Nuevo Ingreso" />
           <Accion to="/nuevo/prestamo" icono={<HandCoins className="size-4" />} texto="Nuevo Préstamo" />
           <Accion to="/nuevo/operacion" icono={<ShoppingBag className="size-4" />} texto="Nueva Operación" />
           <Accion to="/configuracion" icono={<Cog className="size-4" />} texto="Configuración" />

@@ -1,7 +1,8 @@
-import type { Gasto, Operacion, Prestamo } from '../types/finanzas';
+import type { Gasto, Ingreso, Operacion, Prestamo } from '../types/finanzas';
 
 const KEYS = {
   gastos: 'mangox-gastos',
+  ingresos: 'mangox-ingresos',
   prestamos: 'mangox-prestamos',
   operaciones: 'mangox-operaciones',
   preferenciasNotificacion: 'mangox-preferencias-notificacion',
@@ -35,6 +36,10 @@ export function listarPrestamos() {
   return leerLista<Prestamo>(KEYS.prestamos);
 }
 
+export function listarIngresos() {
+  return leerLista<Ingreso>(KEYS.ingresos);
+}
+
 export function listarOperaciones() {
   return leerLista<Operacion>(KEYS.operaciones);
 }
@@ -60,6 +65,11 @@ export function eliminarGasto(gastoId: string) {
 export function agregarPrestamo(prestamo: Prestamo) {
   const data = listarPrestamos();
   guardarLista(KEYS.prestamos, [prestamo, ...data]);
+}
+
+export function agregarIngreso(ingreso: Ingreso) {
+  const data = listarIngresos();
+  guardarLista(KEYS.ingresos, [ingreso, ...data]);
 }
 
 export function actualizarPrestamo(prestamo: Prestamo) {
@@ -90,4 +100,8 @@ export function leerPreferenciasNotificacion(): PreferenciasNotificacion {
 
 export function guardarPreferenciasNotificacion(preferencias: PreferenciasNotificacion) {
   guardarLista(KEYS.preferenciasNotificacion, [preferencias]);
+}
+
+export function clavesAlmacenMangoX() {
+  return Object.values(KEYS);
 }

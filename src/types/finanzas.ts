@@ -50,6 +50,22 @@ export type Operacion = {
   moneda: Moneda;
 };
 
+export type DestinoIngreso = 'ahorro' | 'gasto' | 'cambio_a_pesos_tasa';
+
+export type Ingreso = {
+  id: string;
+  fecha: string;
+  fuente: string;
+  monto: number;
+  moneda: Moneda;
+  propietarioId: string;
+  esFijo: boolean;
+  mesAjuste?: string;
+  destino: DestinoIngreso;
+  tasaCambioPesos?: number;
+  esCobroReal: boolean;
+};
+
 export type CategoriaPresupuesto = {
   id: string;
   nombre: string;
