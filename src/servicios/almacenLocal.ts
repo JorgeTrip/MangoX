@@ -1,6 +1,7 @@
 import type { Gasto, Ingreso, Operacion, Prestamo } from '../types/finanzas';
 
 const KEYS = {
+  perfil: 'mangox-perfil',
   gastos: 'mangox-gastos',
   ingresos: 'mangox-ingresos',
   prestamos: 'mangox-prestamos',
