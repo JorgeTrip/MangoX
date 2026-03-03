@@ -1,16 +1,18 @@
-import { Link, NavLink, Outlet } from 'react-router-dom';
+import { Link, NavLink, Outlet, useLocation } from 'react-router-dom';
 import { useContext, useState } from 'react';
 import { IdiomaContexto } from '../contextos/idioma';
 import { TemaContexto } from '../contextos/tema';
 import { Menu, Sun, Moon, X } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { clsx } from 'clsx';
+import { AnimatePresence, motion } from 'framer-motion';
 
 export default function LayoutBase() {
   const { t } = useTranslation();
   const { cambiar, idioma } = useContext(IdiomaContexto);
   const { tema, alternar } = useContext(TemaContexto);
   const [menuAbierto, setMenuAbierto] = useState(false);
+  const location = useLocation();
 
   const links = [
     { to: '/inicio', label: t('nav.inicio') },
@@ -22,6 +24,10 @@ export default function LayoutBase() {
 
   return (
     <div className={clsx('min-h-screen text-gray-900 dark:text-gray-100', tema === 'claro' ? 'bg-app-claro' : 'bg-app-oscuro')}>
+      <div className="pointer-events-none fixed inset-0 overflow-hidden">
+        <div className="absolute -top-28 -left-24 w-96 h-96 rounded-full bg-sky-200/30 dark:bg-sky-900/20 blur-3xl" />
+        <div className="absolute top-1/3 -right-20 w-80 h-80 rounded-full bg-indigo-200/25 dark:bg-indigo-900/20 blur-3xl" />
+      </div>
       <header className="sticky top-0 z-30 glass dark:glass-dark border-b border-white/15">
         <div className="mx-auto max-w-7xl px-6 py-3 flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -73,8 +79,18 @@ export default function LayoutBase() {
           </div>
         )}
       </header>
-      <main className="mx-auto max-w-7xl px-6 py-10">
-        <Outlet />
+      <main className="relative z-10 mx-auto max-w-7xl px-6 py-10">
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={location.pathname}
+            initial={{ opacity: 0, y: 8, filter: 'blur(4px)' }}
+            animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+            exit={{ opacity: 0, y: -8, filter: 'blur(4px)' }}
+            transition={{ duration: 0.22, ease: 'easeOut' }}
+          >
+            <Outlet />
+          </motion.div>
+        </AnimatePresence>
       </main>
     </div>
   );

@@ -49,49 +49,51 @@ export default function Inicio() {
           </div>
         </div>
       </section>
-      <div className="grid md:grid-cols-3 gap-4">
-        {cargando ? <TarjetaSkeleton /> : <Tarjeta titulo="Saldo consolidado" contenido="$ 1.246.300" delta="+6.2% vs mes anterior" />}
-        {cargando ? <TarjetaSkeleton /> : <Tarjeta titulo="Gastos del mes" contenido={`$ ${gastosMes.toLocaleString('es-AR') || '0'}`} delta="Controlado" />}
-        {cargando ? <TarjetaSkeleton /> : <Tarjeta titulo="Próximo vencimiento" contenido="Visa Platinum · 05/04" delta="En 9 días" />}
-      </div>
-      <div className="grid lg:grid-cols-3 gap-4">
-        <Tarjeta titulo="Ingresos vs Gastos" alto className="lg:col-span-2">
-          <div className="h-64">
-            <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={datos}>
-                <XAxis dataKey="mes" stroke="#9ca3af" />
-                <YAxis stroke="#9ca3af" />
-                <Tooltip />
-                <Line type="monotone" dataKey="ingreso" stroke="#10b981" strokeWidth={2.4} dot={false} />
-                <Line type="monotone" dataKey="gasto" stroke="#ef4444" strokeWidth={2.4} dot={false} />
-              </LineChart>
-            </ResponsiveContainer>
+      <div className="grid xl:grid-cols-12 gap-4 items-start">
+        <div className="grid gap-4 xl:col-span-8">
+          <div className="grid md:grid-cols-3 gap-4">
+            {cargando ? <TarjetaSkeleton /> : <Tarjeta titulo="Saldo consolidado" contenido="$ 1.246.300" delta="+6.2% vs mes anterior" />}
+            {cargando ? <TarjetaSkeleton /> : <Tarjeta titulo="Gastos del mes" contenido={`$ ${gastosMes.toLocaleString('es-AR') || '0'}`} delta="Controlado" />}
+            {cargando ? <TarjetaSkeleton /> : <Tarjeta titulo="Próximo vencimiento" contenido="Visa Platinum · 05/04" delta="En 9 días" />}
           </div>
-        </Tarjeta>
-        <Tarjeta titulo="Resumen rápido" alto>
-          <div className="grid gap-3">
-            <FilaResumen label="Operaciones registradas" value={String(operaciones)} />
-            <FilaResumen label="Préstamos activos" value={String(prestamos)} />
-            <FilaResumen label="Monedas activas" value="ARS · USD · EUR" />
-          </div>
-        </Tarjeta>
-      </div>
-      <div className="grid lg:grid-cols-2 gap-4">
-        <Tarjeta titulo="Distribución por rubro" alto>
-          <div className="grid gap-2 text-sm">
-            <Barra label="Hogar" valor={42} />
-            <Barra label="Tarjetas" valor={28} />
-            <Barra label="Inversiones" valor={18} />
-            <Barra label="Ocio" valor={12} />
-          </div>
-        </Tarjeta>
-        <Tarjeta titulo="Actividad reciente" alto>
-          <ul className="grid gap-2 text-sm">
-            <li className="rounded-lg px-3 py-2 bg-white/30 dark:bg-white/5">Compra supermercado · ARS 24.500</li>
-            <li className="rounded-lg px-3 py-2 bg-white/30 dark:bg-white/5">Transferencia ahorro · USD 120</li>
-            <li className="rounded-lg px-3 py-2 bg-white/30 dark:bg-white/5">Pago tarjeta · ARS 80.000</li>
-          </ul>
-        </Tarjeta>
+          <Tarjeta titulo="Ingresos vs Gastos" alto>
+            <div className="h-72">
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart data={datos}>
+                  <XAxis dataKey="mes" stroke="#9ca3af" />
+                  <YAxis stroke="#9ca3af" />
+                  <Tooltip />
+                  <Line type="monotone" dataKey="ingreso" stroke="#10b981" strokeWidth={2.4} dot={false} />
+                  <Line type="monotone" dataKey="gasto" stroke="#ef4444" strokeWidth={2.4} dot={false} />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+          </Tarjeta>
+          <Tarjeta titulo="Distribución por rubro" alto>
+            <div className="grid gap-2 text-sm">
+              <Barra label="Hogar" valor={42} />
+              <Barra label="Tarjetas" valor={28} />
+              <Barra label="Inversiones" valor={18} />
+              <Barra label="Ocio" valor={12} />
+            </div>
+          </Tarjeta>
+        </div>
+        <aside className="grid gap-4 xl:col-span-4 xl:sticky xl:top-28">
+          <Tarjeta titulo="Resumen rápido" alto>
+            <div className="grid gap-3">
+              <FilaResumen label="Operaciones registradas" value={String(operaciones)} />
+              <FilaResumen label="Préstamos activos" value={String(prestamos)} />
+              <FilaResumen label="Monedas activas" value="ARS · USD · EUR" />
+            </div>
+          </Tarjeta>
+          <Tarjeta titulo="Actividad reciente" alto>
+            <ul className="grid gap-2 text-sm">
+              <li className="rounded-lg px-3 py-2 bg-white/30 dark:bg-white/5">Compra supermercado · ARS 24.500</li>
+              <li className="rounded-lg px-3 py-2 bg-white/30 dark:bg-white/5">Transferencia ahorro · USD 120</li>
+              <li className="rounded-lg px-3 py-2 bg-white/30 dark:bg-white/5">Pago tarjeta · ARS 80.000</li>
+            </ul>
+          </Tarjeta>
+        </aside>
       </div>
       <FAB />
     </div>
